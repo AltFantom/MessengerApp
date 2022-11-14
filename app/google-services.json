@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "418723582169",
+    "project_id": "messanger-dd66c",
+    "storage_bucket": "messanger-dd66c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418723582169:android:0104f6c977701d22dceec8",
+        "android_client_info": {
+          "package_name": "com.kupriyanov.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418723582169-7btl8kfekp8qrhjlelvl58p2mn531f06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOGQHVsC3YalpcnMVjDXWMI5xcBcBwrLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418723582169-7btl8kfekp8qrhjlelvl58p2mn531f06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
