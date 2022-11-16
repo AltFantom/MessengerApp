@@ -9,10 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +37,6 @@ public class UsersActivity extends AppCompatActivity {
         initViews();
         viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         observeViewModel();
-
-        List<User> users = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            User user = new User("id" + i, "name" + i, "lastName" + i, i, new Random().nextBoolean());
-            users.add(user);
-        }
-        usersAdapter.setUsers(users);
     }
 
     private void initViews() {
@@ -55,6 +54,12 @@ public class UsersActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
+            }
+        });
+        viewModel.getUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                usersAdapter.setUsers(users);
             }
         });
     }

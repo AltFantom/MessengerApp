@@ -12,6 +12,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationViewModel extends AndroidViewModel {
 
@@ -19,6 +21,8 @@ public class RegistrationViewModel extends AndroidViewModel {
     private final MutableLiveData<FirebaseUser> user = new MutableLiveData<>();
 
     private final FirebaseAuth auth;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference usersReference;
 
     public RegistrationViewModel(@NonNull Application application) {
         super(application);
@@ -29,6 +33,8 @@ public class RegistrationViewModel extends AndroidViewModel {
                 user.setValue(firebaseAuth.getCurrentUser());
             }
         });
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        usersReference = firebaseDatabase.getReference("Users");
     }
 
     public LiveData<FirebaseUser> getUser() {
@@ -42,6 +48,23 @@ public class RegistrationViewModel extends AndroidViewModel {
     public void SignUn(String email, String password, String name, String lastName, int age) {
         auth
                 .createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        FirebaseUser firebaseUser = authResult.getUser();
+                        if (firebaseUser ==null) {
+                            return;
+                        }
+                        User user = new User(
+                                firebaseUser.getUid(),
+                                name,
+                                lastName,
+                                age,
+                                false
+                                );
+                        usersReference.child(user.getId()).setValue(user);
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
