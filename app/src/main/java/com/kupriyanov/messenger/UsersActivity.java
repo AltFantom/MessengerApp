@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,22 +14,36 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class UsersActivity extends AppCompatActivity {
 
     private UsersViewModel viewModel;
-/*    private static final String EXTRA_NAME = "name";
-    private static final String EXTRA_LAST_NAME = "lastName";
-    private static final String EXTRA_AGE = "age";*/
+    private RecyclerView recyclerViewUsers;
+    private UsersAdapter usersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
-        /*String name = getIntent().getStringExtra(EXTRA_NAME);
-        String lastName = getIntent().getStringExtra(EXTRA_NAME);
-        Integer age = getIntent().getIntExtra(EXTRA_AGE);*/
+        initViews();
         viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         observeViewModel();
+
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            User user = new User("id" + i, "name" + i, "lastName" + i, i, new Random().nextBoolean());
+            users.add(user);
+        }
+        usersAdapter.setUsers(users);
+    }
+
+    private void initViews() {
+        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
+        usersAdapter = new UsersAdapter();
+        recyclerViewUsers.setAdapter(usersAdapter);
     }
 
     private void observeViewModel() {
@@ -61,17 +76,4 @@ public class UsersActivity extends AppCompatActivity {
     public static Intent newIntent(Context context) {
         return new Intent(context, UsersActivity.class);
     }
-
-    /*public static Intent newIntent(
-            Context context,
-            String name,
-            String lastName,
-            Integer age
-    ) {
-        Intent intent = new Intent(context, UsersActivity.class);
-        intent.putExtra(EXTRA_NAME, name);
-        intent.putExtra(EXTRA_LAST_NAME, lastName);
-        intent.putExtra(EXTRA_AGE, age);
-        return intent;
-    }*/
 }
