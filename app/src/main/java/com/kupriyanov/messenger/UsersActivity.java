@@ -51,6 +51,18 @@ public class UsersActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.setUserOnline(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.setUserOnline(false);
+    }
+
     private void initViews() {
         recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
         usersAdapter = new UsersAdapter();

@@ -42,10 +42,6 @@ public class UsersViewModel extends AndroidViewModel {
         setUsers();
     }
 
-    public LiveData<List<User>> getUsers() {
-        return users;
-    }
-
     private void setUsers() {
         usersReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,11 +68,24 @@ public class UsersViewModel extends AndroidViewModel {
         });
     }
 
+    public void setUserOnline(boolean isOnline) {
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        if (firebaseUser == null) {
+            return;
+        }
+        usersReference.child(firebaseUser.getUid()).child("online").setValue(isOnline);
+    }
+
+    public LiveData<List<User>> getUsers() {
+        return users;
+    }
+
     public LiveData<FirebaseUser> getUser() {
         return user;
     }
 
     public void logout() {
+        setUserOnline(false);
         auth.signOut();
     }
 }

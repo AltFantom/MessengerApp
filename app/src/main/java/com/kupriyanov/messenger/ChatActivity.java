@@ -1,12 +1,14 @@
 package com.kupriyanov.messenger;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -49,6 +51,18 @@ public class ChatActivity extends AppCompatActivity {
         recyclerViewMessages.setAdapter(messagesAdapter);
         observeViewModel();
         setupClickListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.setUserOnline(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.setUserOnline(false);
     }
 
     private void setupClickListeners() {
@@ -99,10 +113,16 @@ public class ChatActivity extends AppCompatActivity {
         viewModel.getOtherUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                if (user != null) {
-                    String userInfo = String.format("%s %s", user.getName(), user.getLastName());
-                    textViewTitle.setText(userInfo);
+                String userInfo = String.format("%s %s", user.getName(), user.getLastName());
+                textViewTitle.setText(userInfo);
+                int bgResId;
+                if (user.isOnline()) {
+                    bgResId = R.drawable.circle_green;
+                } else {
+                    bgResId = R.drawable.circle_red;
                 }
+                Drawable background = ContextCompat.getDrawable(ChatActivity.this, bgResId);
+                viewOnlineStatus.setBackground(background);
             }
         });
     }
